@@ -3,6 +3,8 @@
 <!-- <link rel="import" href="../../bower_components/paper-button/paper-button.html"> -->
 <link rel="import" href="../../bower_components/paper-styles/color.html">
 
+<link rel="import" href="../../bower_components/web-socket/web-socket.html">
+
 <dom-module id="pixel-art-app">
   <template strip-whitespace>
     <style>
@@ -13,8 +15,8 @@
       #art {
         display: table;
         border-spacing: 1px;
-        background-color: black;
-        border: 5px solid black;
+        background-color: white;
+        border: 4px solid white;
       }
 
       .row {
@@ -23,7 +25,7 @@
 
       .pixel {
         display: table-cell;
-        background-color: white;
+        background-color: black;
         width: 40px;
         height: 40px;
       }
@@ -32,18 +34,18 @@
         display: inline-block;
         width: 38px;
         height: 38px;
-        border: 1px solid black;
+        border: 1px solid white;
         margin: 1px;
       }
     </style>
 
     <div id="art">
       <div class="row">
-        <template is="dom-repeat" items="{{rows}}">
+        <template is="dom-repeat" items="{{rows}}" index-as="x">
           <div class="row">
-            <template is="dom-repeat" items="{{columns}}">
-              <div class="pixel" on-click="__setPixelColor"></div>
-              <!-- <div>#[[index]]</div> -->
+            <template is="dom-repeat" items="{{columns}}" index-as="y">
+              <div id="[[__index(x, y)]]" class="pixel" on-click="__setPixelColor"></div>
+              <div style="color:red">[[col_idx]]</div>
             </template>
           </div>
         </template>
@@ -51,12 +53,14 @@
     </div>
     <br>
     <div id="art">
-        <div class="pixel" style="background-color:red;" on-click="__setColor" data-args="red"></div>
-        <div class="pixel" style="background-color:green;" on-click="__setColor" data-args="green"></div>
-        <div class="pixel" style="background-color:blue;" on-click="__setColor" data-args="blue"></div>
-        <div class="pixel" style="background-color:white;" on-click="__setColor" data-args="white"></div>
-        <div class="pixel" style="background-color:black;" on-click="__setColor" data-args="black"></div>
+      <div class="pixel" style="background-color:red;" on-click="__setColor" data-args="red"></div>
+      <div class="pixel" style="background-color:green;" on-click="__setColor" data-args="green"></div>
+      <div class="pixel" style="background-color:blue;" on-click="__setColor" data-args="blue"></div>
+      <div class="pixel" style="background-color:white;" on-click="__setColor" data-args="white"></div>
+      <div class="pixel" style="background-color:black;" on-click="__setColor" data-args="black"></div>
     </div>
+
+    <web-socket id="ws" auto url="[[url]]" state="{{state}}" verbose></web-socket>
   </template>
 
   <script>
@@ -66,6 +70,17 @@
 
       static get properties() {
         return {
+          url: {
+            type: String,
+            //value: 'ws://' + window.location.hostname + ':8000/matrix'
+            //value: 'ws://' + window.location.hostname + ':80/matrix'
+            value: 'ws://esp8266.local:80/matrix'
+          },
+          state: {
+            type: Number,
+            observer: '__handleWSStateChanges',
+            notify: true
+          },
           color: {
             type: String,
             value: 'black',
@@ -77,8 +92,24 @@
           rows: {
             type: Array,
             value: [0, 1, 2, 3, 4, 5, 6, 7]
+          },
+          index: {
+            type: Number,
+            value: 0
           }
         };
+      }
+
+      __index(x, y) {
+        
+        //console.log((x*8)+y);
+        
+        return (x*8)+y;
+      }
+
+      __handleWSStateChanges() {
+
+        console.log("WS state: " + this.state);
       }
 
       __setColor(event) {
@@ -89,8 +120,12 @@
 
       __setPixelColor(event) {
 
+        console.log(event.target.id);
+
         //console.log(event.target);
         event.target.style.background = this.color;
+
+        this.$.ws.send({ pixel: event.target.id, color: this.color });
       }
     }
     window.customElements.define(PixelArtApp.is, PixelArtApp);
