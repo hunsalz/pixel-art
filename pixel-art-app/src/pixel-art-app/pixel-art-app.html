@@ -1,0 +1,98 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- <link rel="import" href="../../bower_components/paper-button/paper-button.html"> -->
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+
+<dom-module id="pixel-art-app">
+  <template strip-whitespace>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #art {
+        display: table;
+        border-spacing: 1px;
+        background-color: black;
+        border: 5px solid black;
+      }
+
+      .row {
+        display: table-row;
+      }
+
+      .pixel {
+        display: table-cell;
+        background-color: white;
+        width: 40px;
+        height: 40px;
+      }
+
+      .pen {
+        display: inline-block;
+        width: 38px;
+        height: 38px;
+        border: 1px solid black;
+        margin: 1px;
+      }
+    </style>
+
+    <div id="art">
+      <div class="row">
+        <template is="dom-repeat" items="{{rows}}">
+          <div class="row">
+            <template is="dom-repeat" items="{{columns}}">
+              <div class="pixel" on-click="__setPixelColor"></div>
+              <!-- <div>#[[index]]</div> -->
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+    <br>
+    <div id="art">
+        <div class="pixel" style="background-color:red;" on-click="__setColor" data-args="red"></div>
+        <div class="pixel" style="background-color:green;" on-click="__setColor" data-args="green"></div>
+        <div class="pixel" style="background-color:blue;" on-click="__setColor" data-args="blue"></div>
+        <div class="pixel" style="background-color:white;" on-click="__setColor" data-args="white"></div>
+        <div class="pixel" style="background-color:black;" on-click="__setColor" data-args="black"></div>
+    </div>
+  </template>
+
+  <script>
+    class PixelArtApp extends Polymer.Element {
+
+      static get is() { return 'pixel-art-app'; }
+
+      static get properties() {
+        return {
+          color: {
+            type: String,
+            value: 'black',
+          },
+          columns: {
+            type: Array,
+            value: [0, 1, 2, 3, 4, 5, 6, 7]
+          },
+          rows: {
+            type: Array,
+            value: [0, 1, 2, 3, 4, 5, 6, 7]
+          }
+        };
+      }
+
+      __setColor(event) {
+
+        //console.log("Changed: " + event.target.getAttribute('data-args'));
+        this.color = event.target.getAttribute('data-args');
+      }
+
+      __setPixelColor(event) {
+
+        //console.log(event.target);
+        event.target.style.background = this.color;
+      }
+    }
+    window.customElements.define(PixelArtApp.is, PixelArtApp);
+  </script>
+</dom-module>

@@ -1,0 +1,7 @@
+{
+  "name": "Pixel-Art-App",
+  "short_name": "Pixel-Art-App",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape"
+}
