@@ -4,6 +4,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#latest",
     "paper-button": "PolymerElements/paper-button#latest",
+    "paper-swatch-picker": "PolymerElements/paper-swatch-picker#latest",
+    "web-animations-js": "web-animations/web-animations-js#latest",
     "web-socket": "hunsalz/web-socket#latest"
   },
   "devDependencies": {
