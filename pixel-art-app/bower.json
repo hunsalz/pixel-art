@@ -3,9 +3,8 @@
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#latest",
-    "paper-button": "PolymerElements/paper-button#latest",
-    "paper-swatch-picker": "PolymerElements/paper-swatch-picker#latest",
-    "web-animations-js": "web-animations/web-animations-js#latest",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#latest",
+    "paper-styles": "PolymerElements/paper-styles#latest",
     "web-socket": "hunsalz/web-socket#latest"
   },
   "devDependencies": {
