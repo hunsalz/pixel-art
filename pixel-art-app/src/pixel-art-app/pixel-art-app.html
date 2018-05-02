@@ -46,18 +46,19 @@
         @apply --layout-flex;
       }
 
+      #palette {
+        display: inline-flex;
+        @apply --layout-center;
+      }
+
       #colors {
-        display: table;
+        display: inline-flex;
+        @apply --layout-center;
       }
 
       .color {
-        display: table-cell;
         width: 100%;
         height: 100%;
-      }
-
-      .color:hover {
-        padding: 4px;
       }
 
       @media screen and (orientation: landscape) {
@@ -65,7 +66,6 @@
           width: 24vh;
           height: 100%;
           @apply --layout-vertical;
-          @apply --layout-center;
         }
         #colors {
           width: 10vh;
@@ -83,7 +83,6 @@
           width: 100%;
           height: 24vw;
           @apply --layout-horizontal;
-          @apply --layout-center;
         }
         #colors {
           width: 80vw;
@@ -103,7 +102,7 @@
       <div id="palette">
         <span class="spacer"></span>
         <div id="colors">
-          <div class="color" style="background: #FFFFFF" on-tap="__setColor"></div>
+          <div class="color" style="background: #FFFFFF; padding: 4px" on-tap="__setColor"></div>
           <div class="color" style="background: #000000" on-tap="__setColor"></div>
           <div class="color" style="background: #B22222" on-tap="__setColor"></div>
           <div class="color" style="background: #008000" on-tap="__setColor"></div>
@@ -151,7 +150,7 @@
           },
           color: {
             type: String,
-            value: '#FFFFFF' // default is white
+            value: 'rgb(255, 255, 255)' // default is white and expected in rgb() notation
           },
           columns: {
             type: Array,
@@ -176,27 +175,33 @@
       }
 
       __setColor(event) {
-
-        console.log(event.target.style.background);
-
-
         // save color value
         this.color = event.target.style.background;
+        // palette effect ...
+        // set all colors to default values
+        var nodes = this.$.colors.querySelectorAll('div');
+        for (var i = 0; i < nodes.length; i++) {
+          nodes[i].style.padding = '0px';
+        }
+        // highlight selected color
+        event.target.style.padding = '4px';
       }
 
       __setPixelColor(event) {
 
-        //var hex = this.color.toString(16).replace('#', '0x');
-
-        console.log(event.target.id + " = " + this.color);
-
-        // var hsl = this.$.hsl;
-
         event.target.style.background = this.color;
 
-        // console.log({ pixel: event.target.id, hue: hsl.hue, saturation: hsl.saturation, lightness: hsl.lightness });
+        console.log({ pixel: event.target.id, rgb: this.__rgb2hex(this.color) });
 
-        // this.$.ws.send({ pixel: event.target.id, hue: hsl.hue, saturation: hsl.saturation, lightness: hsl.lightness });
+        this.$.ws.send({ pixel: event.target.id, rgb: this.__rgb2hex(this.color) });
+      }
+
+      __rgb2hex(rgb) {
+        rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
+        function hex(x) {
+          return ("0" + parseInt(x).toString(16)).slice(-2);
+        }
+        return "0x" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
       }
     }
     window.customElements.define(PixelArtApp.is, PixelArtApp);
