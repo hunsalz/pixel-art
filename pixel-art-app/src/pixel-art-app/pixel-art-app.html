@@ -1,7 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
-<link rel="import" href="../../bower_components/paper-styles/color.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
 <link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 
 <link rel="import" href="../../bower_components/web-socket/web-socket.html">
@@ -61,7 +63,20 @@
         height: 100%;
       }
 
+      #menu {
+        display: inline-flex;
+        @apply --layout-center;
+      }
+
+      paper-icon-button {
+        color: white;
+      }
+
       @media screen and (orientation: landscape) {
+        #matrix {
+          width: 80vh;
+          height: 80vh;
+        }
         #palette {
           width: 24vh;
           height: 100%;
@@ -72,13 +87,19 @@
           height: 80vh;
           @apply --layout-vertical;
         }
-        #matrix {
-          width: 80vh;
-          height: 80vh;
+        #menu {
+          width: 20vh;
+          height: 100vh;
+          background: yellowgreen;
+          @apply --layout-vertical;
         }
       }
 
       @media screen and (orientation: portrait) {
+        #matrix {
+          width: 80vw;
+          height: 80vw;
+        }
         #palette {
           width: 100%;
           height: 24vw;
@@ -89,9 +110,11 @@
           height: 10vw;
           @apply --layout-horizontal;
         }
-        #matrix {
-          width: 80vw;
-          height: 80vw;
+        #menu {
+          width: 100vw;
+          height: 20vw;
+          background: yellowgreen;
+          @apply --layout-horizontal;
         }
       }
     </style>
@@ -123,6 +146,12 @@
             </template>
           </div>
         </template>
+      </div>
+
+      <div id="menu">
+        <span class="spacer"></span>
+        <paper-icon-button icon="favorite"></paper-icon-button>
+        <span class="spacer"></span>
       </div>
     </div>
 
@@ -165,15 +194,24 @@
         };
       }
 
+      /**
+       * Calculate a 8x8 matrix index from top left (0) to right until last pixel is reached.
+       */
       __index(x, y) {
         // calculate index backwards for 8x8 matrix, so that first element of templating receives the highest ordinal number
         return (64 - (x * 8)) - (8 - y);
       }
 
+      /**
+       * Log WS state changes.
+       */
       __handleWSStateChanges() {
         console.log("WS state: " + this.state);
       }
 
+      /**
+       * Set a new color value.
+       */
       __setColor(event) {
         // save color value
         this.color = event.target.style.background;
@@ -187,22 +225,49 @@
         event.target.style.padding = '4px';
       }
 
+      /**
+       * Set target pixel corresponding to current color value and notify change via WS.  
+       */
       __setPixelColor(event) {
 
         event.target.style.background = this.color;
 
-        console.log({ pixel: event.target.id, rgb: this.__rgb2hex(this.color) });
+        // TODO remove verbose note later
+        console.log({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
 
-        this.$.ws.send({ pixel: event.target.id, rgb: this.__rgb2hex(this.color) });
+        this.$.ws.send({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
       }
 
-      __rgb2hex(rgb) {
-        rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
+      /**
+       * Return RGB-object from CSS 'rgb(red, green, blue)' string.
+       */
+      __parseRGB(rgb) {
+
+        let matches = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
+        return { 'r': matches[1], 'g': matches[2], 'b': matches[3] };
+      }
+
+      /**
+       * Return RGB as Hex value from CSS 'rgb(red, green, blue)' string.
+       */
+      __parseRGB2Hex(rgb) {
+
+        let obj = this.__parseRGB(rgb);
         function hex(x) {
           return ("0" + parseInt(x).toString(16)).slice(-2);
         }
-        return "0x" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+        return hex(obj.r) + hex(obj.g) + hex(obj.b);
       }
+
+      __test(rgb) {
+
+        var r = (rgb >> 16) & 0xFF;
+        var g = (rgb >> 8) & 0xFF;
+        var b = (rgb >> 0) & 0xFF;
+
+        console.log("r=" + r + " g=" + g + " b=" + b);
+      }
+
     }
     window.customElements.define(PixelArtApp.is, PixelArtApp);
   </script>

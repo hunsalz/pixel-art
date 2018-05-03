@@ -4,7 +4,9 @@
   "dependencies": {
     "polymer": "Polymer/polymer#latest",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#latest",
+    "iron-icons": "PolymerElements/iron-icons#latest",
     "paper-styles": "PolymerElements/paper-styles#latest",
+    "paper-icon-button": "PolymerElements/paper-icon-button#latest",
     "web-socket": "hunsalz/web-socket#latest"
   },
   "devDependencies": {
