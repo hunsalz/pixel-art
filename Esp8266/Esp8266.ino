@@ -1,7 +1,7 @@
 #include <Esp8266Utils.h>     // https://github.com/hunsalz/esp8266utils
 #include <Log4Esp.h>          // https://github.com/hunsalz/log4Esp
 
-#include "FastLED.h"
+#include "FastLED.h"          // https://github.com/FastLED/FastLED
 
 #include "config.h"
 
@@ -89,16 +89,14 @@ void setup() {
 
     json.prettyPrintTo(Serial);
 
-    if (json.success() && json["pixel"].success() && json["color"].success()) {
+    if (json.success() && json["pixel"].success() && json["rgb"].success()) {
       
       uint16_t pixel = json["pixel"];
-      String color = json["color"];
+      uint32_t rgb = json["pixel"];
 
-      if (color == "red") leds[pixel] = CRGB::Green;
-      if (color == "green") leds[pixel] = CRGB::Red;
-      if (color == "blue") leds[pixel] = CRGB::Blue;
-      if (color == "black") leds[pixel] = CRGB::Black;
-      if (color == "white") leds[pixel] = CRGB::White;
+      //leds[pixel] = 0xFF44DD;
+      //leds[pixel] = CRGB::White;
+      leds[pixel] = rgb;
 
       FastLED.show();
     } else {
