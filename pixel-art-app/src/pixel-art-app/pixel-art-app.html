@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/editor-icons.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-styles/color.html">
 <link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
@@ -23,49 +23,43 @@
         width: 100%;
         overflow: hidden;
         background: var(--paper-blue-grey-800);
-      }
-
-      #matrix {
-        display: table;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-90deg);
-        border: 1px solid var(--paper-orange-700);
-      }
-
-      .row {
-        display: table-row;
-      }
-
-      .pixel {
-        display: table-cell;
-        background: #000000;
-        border: 1px solid var(--paper-orange-700);
-      }
-
-      .spacer {
         @apply --layout-flex;
       }
 
-      #palette {
+      .box {
+        display: inline-block;
+        background: yellowgreen;
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+      }
+
+      .colors {
         display: inline-flex;
         @apply --layout-center;
       }
 
-      #colors {
+      .spacer {
         display: inline-flex;
-        @apply --layout-center;
-      }
-
-      .color {
         width: 100%;
         height: 100%;
       }
 
-      #menu {
+      .matrix {
         display: inline-flex;
-        @apply --layout-center;
+        border: 1px solid var(--paper-orange-700);
+      }
+
+      .row {
+        display: inline-flex;
+        width: 100%;
+        @apply --layout-vertical;
+      }
+
+      .pixel {
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        border: 1px solid var(--paper-orange-700);
       }
 
       paper-icon-button {
@@ -73,58 +67,54 @@
       }
 
       @media screen and (orientation: landscape) {
-        #matrix {
+        .container {
+          @apply --layout-horizontal;
+        }
+        .box {
+          @apply --layout-vertical;
+        }
+        .colors {
+          width: 30vh;
+          height: 80vh;
+          @apply --layout-vertical;
+        }
+        .color {
+          width: 10vh;
+          height: 100%;
+        }
+        .matrix {
           width: 80vh;
           height: 80vh;
-        }
-        #palette {
-          width: 24vh;
-          height: 100%;
-          @apply --layout-vertical;
-        }
-        #colors {
-          width: 10vh;
-          height: 80vh;
-          @apply --layout-vertical;
-        }
-        #menu {
-          width: 20vh;
-          height: 100vh;
-          background: yellowgreen;
-          @apply --layout-vertical;
         }
       }
 
       @media screen and (orientation: portrait) {
-        #matrix {
+        .container {
+          @apply --layout-vertical;
+        }
+        .box {
+          @apply --layout-horizontal;
+        }
+        .colors {
+          width: 80vw;
+          height: 30vw;
+          @apply --layout-horizontal;
+        }
+        .color {
+          width: 100%;
+          height: 10vw;
+        }
+        .matrix {
           width: 80vw;
           height: 80vw;
-        }
-        #palette {
-          width: 100%;
-          height: 24vw;
-          @apply --layout-horizontal;
-        }
-        #colors {
-          width: 80vw;
-          height: 10vw;
-          @apply --layout-horizontal;
-        }
-        #menu {
-          width: 100vw;
-          height: 20vw;
-          background: yellowgreen;
-          @apply --layout-horizontal;
         }
       }
     </style>
 
     <div class="container">
 
-      <!-- add pre-defined color palette -->
-      <div id="palette">
-        <span class="spacer"></span>
-        <div id="colors">
+      <div class="box">
+        <div id="colors" class="colors">
           <div class="color" style="background: #FFFFFF; padding: 4px" on-tap="__setColor"></div>
           <div class="color" style="background: #000000" on-tap="__setColor"></div>
           <div class="color" style="background: #B22222" on-tap="__setColor"></div>
@@ -134,29 +124,28 @@
           <div class="color" style="background: #40E0D0" on-tap="__setColor"></div>
           <div class="color" style="background: #EE82EE" on-tap="__setColor"></div>
         </div>
-        <span class="spacer"></span>
       </div>
 
-      <!-- add matrix -->
-      <div id="matrix">
-        <template is="dom-repeat" items="{{columns}}" index-as="y">
-          <div class="row">
-            <template is="dom-repeat" items="{{rows}}" index-as="x">
-              <div id="[[__index(x, y)]]" class="pixel" on-click="__setPixelColor"></div>
-            </template>
-          </div>
-        </template>
+      <div class="spacer"></div>
+      <div class="box">
+        <div id="matrix" class="matrix">
+          <template is="dom-repeat" items="{{columns}}" index-as="y">
+            <div class="row">
+              <template is="dom-repeat" items="{{rows}}" index-as="x">
+                <div id="[[__index(x, y)]]" class="pixel" on-click="__setPixelColor"></div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="spacer"></div>
+
+      <div class="box">
+        <paper-icon-button icon="editor:format-color-reset" on-tap="__reset"></paper-icon-button>
       </div>
 
-      <div id="menu">
-        <span class="spacer"></span>
-        <paper-icon-button icon="favorite"></paper-icon-button>
-        <span class="spacer"></span>
-      </div>
-    </div>
-
-    <!-- add websocket support -->
-    <web-socket id="ws" auto url="[[url]]" state="{{state}}" verbose></web-socket>
+      <!-- add websocket support -->
+      <web-socket id="ws" auto url="[[url]]" state="{{state}}" verbose></web-socket>
   </template>
 
   <script>
@@ -168,9 +157,9 @@
         return {
           url: {
             type: String,
-            value: 'ws://' + window.location.hostname + ':8000/matrix'
+            //value: 'ws://' + window.location.hostname + ':8000/matrix'
             //value: 'ws://' + window.location.hostname + ':80/matrix'
-            //value: 'ws://esp8266.local:80/matrix'
+            value: 'ws://esp8266.local:80/matrix'
           },
           state: {
             type: Number,
@@ -195,11 +184,10 @@
       }
 
       /**
-       * Calculate a 8x8 matrix index from top left (0) to right until last pixel is reached.
+       * Calculate a 8x8 matrix index from top left (0) to bottom right (63).
        */
       __index(x, y) {
-        // calculate index backwards for 8x8 matrix, so that first element of templating receives the highest ordinal number
-        return (64 - (x * 8)) - (8 - y);
+        return (x * 8) + y;
       }
 
       /**
@@ -216,7 +204,7 @@
         // save color value
         this.color = event.target.style.background;
         // palette effect ...
-        // set all colors to default values
+        // set color values back to default
         var nodes = this.$.colors.querySelectorAll('div');
         for (var i = 0; i < nodes.length; i++) {
           nodes[i].style.padding = '0px';
@@ -236,6 +224,20 @@
         console.log({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
 
         this.$.ws.send({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
+      }
+
+      __reset(event) {
+
+        // set active color to all pixels at once
+        var nodes = this.$.matrix.querySelectorAll('div');
+        for (var i = 0; i < nodes.length; i++) {
+          nodes[i].style.background = this.color;
+        }
+
+        // TODO remove verbose note later
+        console.log({ reset: "all", rgb: this.__parseRGB2Hex(this.color) });
+
+        this.$.ws.send({ reset: "all", rgb: this.__parseRGB2Hex(this.color) });
       }
 
       /**
