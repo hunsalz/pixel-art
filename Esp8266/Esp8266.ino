@@ -89,14 +89,31 @@ void setup() {
 
     json.prettyPrintTo(Serial);
 
-    if (json.success() && json["pixel"].success() && json["rgb"].success()) {
+    if (json.success() && (json["pixel"].success() || json["reset"].success()) &&  json["rgb"].success()) {
+      uint32_t rgb = strtol(json["rgb"], NULL, 16);
       
-      uint16_t pixel = json["pixel"];
-      uint32_t rgb = json["pixel"];
+      if (json["pixel"].success()) {   
+        
 
-      //leds[pixel] = 0xFF44DD;
-      //leds[pixel] = CRGB::White;
-      leds[pixel] = rgb;
+        LOG.verbose("PIXEL mode");
+
+        uint16_t pixel = json["pixel"];
+        //leds[pixel] = 0xFF44DD;
+        //leds[pixel] = CRGB::White;
+        leds[pixel] = rgb;
+      } else {
+        
+        LOG.verbose("RESET mode");
+
+        for(int i=0; i<64; i++) {
+          leds[i] = rgb;
+        }
+
+        // for (CRGB led : leds) {
+        //   led = CRGB::White;
+        // }
+      }
+
 
       FastLED.show();
     } else {
