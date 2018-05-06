@@ -91,10 +91,9 @@ void setup() {
 
     if (json.success() && (json["pixel"].success() || json["reset"].success()) &&  json["rgb"].success()) {
       uint32_t rgb = strtol(json["rgb"], NULL, 16);
-      
+ 
       if (json["pixel"].success()) {   
         
-
         LOG.verbose("PIXEL mode");
 
         uint16_t pixel = json["pixel"];
@@ -105,16 +104,10 @@ void setup() {
         
         LOG.verbose("RESET mode");
 
-        for(int i=0; i<64; i++) {
+        for (int i = 0; i < NUM_LEDS; i++) {
           leds[i] = rgb;
         }
-
-        // for (CRGB led : leds) {
-        //   led = CRGB::White;
-        // }
       }
-
-
       FastLED.show();
     } else {
       client->text(F("Received an unexpected message."));
