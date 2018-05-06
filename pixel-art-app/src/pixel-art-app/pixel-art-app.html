@@ -26,38 +26,31 @@
         @apply --layout-flex;
       }
 
-      .box {
-        display: inline-block;
-        background: yellowgreen;
-        @apply --layout-vertical;
-        @apply --layout-center-justified;
-      }
-
-      .colors {
+      .boxing {
         display: inline-flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        @apply --layout-flex;
         @apply --layout-center;
       }
 
-      .spacer {
-        display: inline-flex;
-        width: 100%;
-        height: 100%;
+      .colors {
+        @apply --layout-center;
       }
 
       .matrix {
         display: inline-flex;
-        border: 1px solid var(--paper-orange-700);
+        @apply --layout-flex-3;
+        @apply --layout-center;
       }
 
       .row {
-        display: inline-flex;
-        width: 100%;
         @apply --layout-vertical;
       }
 
       .pixel {
-        width: 100%;
-        height: 100%;
         background: #000000;
         border: 1px solid var(--paper-orange-700);
       }
@@ -70,11 +63,11 @@
         .container {
           @apply --layout-horizontal;
         }
-        .box {
-          @apply --layout-vertical;
+        .boxing {
+          @apply --layout-horizontal;
         }
         .colors {
-          width: 30vh;
+          width: 10vh;
           height: 80vh;
           @apply --layout-vertical;
         }
@@ -86,18 +79,22 @@
           width: 80vh;
           height: 80vh;
         }
+        .pixel {
+          width: 10vh;
+          height: 10vh;
+        }
       }
 
       @media screen and (orientation: portrait) {
         .container {
           @apply --layout-vertical;
         }
-        .box {
-          @apply --layout-horizontal;
+        .boxing {
+          @apply --layout-vertical;
         }
         .colors {
           width: 80vw;
-          height: 30vw;
+          height: 10vw;
           @apply --layout-horizontal;
         }
         .color {
@@ -108,12 +105,16 @@
           width: 80vw;
           height: 80vw;
         }
+        .pixel {
+          width: 10vw;
+          height: 10vw;
+        }
       }
     </style>
 
     <div class="container">
 
-      <div class="box">
+      <div class="boxing">
         <div id="colors" class="colors">
           <div class="color" style="background: #FFFFFF; padding: 4px" on-tap="__setColor"></div>
           <div class="color" style="background: #000000" on-tap="__setColor"></div>
@@ -126,8 +127,7 @@
         </div>
       </div>
 
-      <div class="spacer"></div>
-      <div class="box">
+      <div class="boxing">
         <div id="matrix" class="matrix">
           <template is="dom-repeat" items="{{columns}}" index-as="y">
             <div class="row">
@@ -138,14 +138,15 @@
           </template>
         </div>
       </div>
-      <div class="spacer"></div>
 
-      <div class="box">
-        <paper-icon-button icon="editor:format-color-reset" on-tap="__reset"></paper-icon-button>
+      <div class="boxing">
+        <paper-icon-button icon="editor:format-color-fill" on-tap="__reset"></paper-icon-button>
       </div>
 
-      <!-- add websocket support -->
-      <web-socket id="ws" auto url="[[url]]" state="{{state}}" verbose></web-socket>
+    </div>
+
+    <!-- add websocket support -->
+    <web-socket id="ws" auto url="[[url]]" state="{{state}}" verbose></web-socket>
   </template>
 
   <script>
@@ -220,9 +221,6 @@
 
         event.target.style.background = this.color;
 
-        // TODO remove verbose note later
-        console.log({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
-
         this.$.ws.send({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
       }
 
@@ -233,9 +231,6 @@
         for (var i = 0; i < nodes.length; i++) {
           nodes[i].style.background = this.color;
         }
-
-        // TODO remove verbose note later
-        console.log({ reset: "all", rgb: this.__parseRGB2Hex(this.color) });
 
         this.$.ws.send({ reset: "all", rgb: this.__parseRGB2Hex(this.color) });
       }
@@ -258,18 +253,9 @@
         function hex(x) {
           return ("0" + parseInt(x).toString(16)).slice(-2);
         }
-        return hex(obj.r) + hex(obj.g) + hex(obj.b);
+        //return hex(obj.r) + hex(obj.g) + hex(obj.b);
+        return hex(obj.g) + hex(obj.r) + hex(obj.b);
       }
-
-      __test(rgb) {
-
-        var r = (rgb >> 16) & 0xFF;
-        var g = (rgb >> 8) & 0xFF;
-        var b = (rgb >> 0) & 0xFF;
-
-        console.log("r=" + r + " g=" + g + " b=" + b);
-      }
-
     }
     window.customElements.define(PixelArtApp.is, PixelArtApp);
   </script>
