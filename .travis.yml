@@ -11,13 +11,3 @@ cache:
     - node_modules
 install:
   - npm install -g bower
-before_deploy:
-  - git clone https://github.com/hunsalz/pixel-art components/pixel-art-app
-deploy:
-  provider: pages
-  github-token: $GH_PAGES_TOKEN
-  skip-cleanup: true
-  keep-history: true
-  verbose: true
-  on:
-    branch: master
