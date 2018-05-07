@@ -23,16 +23,17 @@ install:
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs;
   - arduino --board esp8266:esp8266:generic --save-prefs
   - arduino --pref "compiler.warning_level=all" --save-prefs
-script:
-  - cd pixel-art-app/
-  - polymer install -v
-  - cd ..
-  - cd functions/
-  - npm install
-  - cd ..
-  - source $TRAVIS_BUILD_DIR/travis/build.sh;
+before_deploy:
+  - bower install jquery --config.directory=components
+  - git clone https://github.com/hunsalz/pixel-art components/pixel-art-app
+  - echo "<META http-equiv="refresh" content=\"0;URL=components/pixel-art-app/\">" >index.html
 deploy:
-  skip_cleanup: true
-
+  provider: pages
+  github-token: $GH_PAGES_TOKEN
+  skip-cleanup: true
+  keep-history: true
+  verbose: true
+  on:
+    branch: master
 after_success:
   - bash <(curl -s https://codecov.io/bash);
