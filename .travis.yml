@@ -13,7 +13,6 @@ install:
   - npm install -g bower
 before_deploy:
   - git clone https://github.com/hunsalz/pixel-art components/pixel-art-app
-  - echo "<META http-equiv="refresh" content=\"0;URL=components/pixel-art-app/\">" >index.html
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
