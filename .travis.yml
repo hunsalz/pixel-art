@@ -1,30 +1,17 @@
 language: node_js
 dist: trusty
-os: linux
-env:
-  global:
-    - ARDUINO_VERSION=1.8.5
+sudo: required
+addons:
+  firefox: "latest"
 node_js:
   - "node"
   - "stable"
 cache:
   directories:
     - node_modules
-before_install:
-  - wget https://downloads.arduino.cc/arduino-${ARDUINO_VERSION}-linux64.tar.xz
-  - tar xf arduino-${ARDUINO_VERSION}-linux64.tar.xz
-  - sudo mv arduino-${ARDUINO_VERSION} /usr/local/share/arduino
-  - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 install:
-  - npm install -g polymer-cli
-  - npm install -g firebase-tools
-  - ln -s $PWD /usr/local/share/arduino/libraries/log4Esp
-  - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --install-boards esp8266:esp8266;
-  - arduino --pref "boardsmanager.additional.urls=" --save-prefs;
-  - arduino --board esp8266:esp8266:generic --save-prefs
-  - arduino --pref "compiler.warning_level=all" --save-prefs
+  - npm install -g bower
 before_deploy:
-  - bower install jquery --config.directory=components
   - git clone https://github.com/hunsalz/pixel-art components/pixel-art-app
   - echo "<META http-equiv="refresh" content=\"0;URL=components/pixel-art-app/\">" >index.html
 deploy:
@@ -35,5 +22,3 @@ deploy:
   verbose: true
   on:
     branch: master
-after_success:
-  - bash <(curl -s https://codecov.io/bash);
