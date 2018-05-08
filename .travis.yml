@@ -29,8 +29,11 @@ script:
   - cd ..
   - source $TRAVIS_BUILD_DIR/travis/build.sh
 before_deploy:
-  - git clone https://github.com/hunsalz/pixel-art components/pixel-art
-  - echo "<META http-equiv="refresh" content=\"0;URL=components/pixel-art/\">" >index.html
+  - git init
+  - git remote add -f origin https://github.com/hunsalz/pixel-art.git
+  - git config core.sparseCheckout true
+  - git pull origin master
+  - cd pixel-art-app/
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
