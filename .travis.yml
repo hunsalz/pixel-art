@@ -26,3 +26,16 @@ install:
 script:
   - cd pixel-art-app/
   - polymer install -v
+  - cd ..
+  - source $TRAVIS_BUILD_DIR/travis/build.sh
+before_deploy:
+  - git clone https://github.com/hunsalz/pixel-art components/pixel-art
+  - echo "<META http-equiv="refresh" content=\"0;URL=components/pixel-art/\">" >index.html
+deploy:
+  provider: pages
+  github-token: $GH_PAGES_TOKEN
+  skip-cleanup: true
+  keep-history: true
+  verbose: true
+  on:
+    branch: master
