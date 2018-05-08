@@ -29,10 +29,6 @@ script:
   - cd ..
   - source $TRAVIS_BUILD_DIR/travis/build.sh
 before_deploy:
-  - git init
-  - git remote add -f origin https://github.com/hunsalz/pixel-art.git
-  - git config core.sparseCheckout true
-  - git pull origin master
   - cd pixel-art-app/
 deploy:
   provider: pages
