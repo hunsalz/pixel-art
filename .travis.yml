@@ -27,11 +27,10 @@ script:
   - polymer install -v
   - cd ..
   - source $TRAVIS_BUILD_DIR/travis/build.sh
-before_deploy:
-  - cd pixel-art-app/
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
+  local-dir: pixel-art-app/
   skip-cleanup: true
   keep-history: true
   verbose: true
