@@ -28,7 +28,7 @@ script:
   - cd ..
   - source $TRAVIS_BUILD_DIR/travis/build.sh
 before_deploy:
-  - sed -i 's/href="\/src/href="\/pixel-art\/src/g' index.html
+  - sed 's/href="\/src/href="\/pixel-art\/src/g' index.html
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
