@@ -41,6 +41,6 @@ Rename `config.h.template` to `config.h` and insert your WiFi settings.
 
 4. Upload bundled app to ESP8266
 
-A [plugin](https://github.com/esp8266/arduino-esp8266fs-plugin) is avaiable for Arduino IDE.
+A [plugin](https://github.com/esp8266/arduino-esp8266fs-plugin) is available for Arduino IDE.
 
 5. Browse to http://esp8266.local/ to load app.
