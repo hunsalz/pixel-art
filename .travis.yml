@@ -29,7 +29,7 @@ script:
   - polymer install -v
 before_deploy:
   - mkdir build
-  - polymer-bundler index.html --inline-scripts --inline-css --strip-comments > build/index.build.html
+  - polymer-bundler index.html --inline-scripts --inline-css --strip-comments > build/index.html
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
