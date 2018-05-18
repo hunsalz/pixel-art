@@ -24,13 +24,12 @@ install:
   - arduino --board esp8266:esp8266:generic --save-prefs
   - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
+  - source $TRAVIS_BUILD_DIR/travis/build.sh
   - cd pixel-art-app/
   - polymer install -v
-  - cd ..
-  - source $TRAVIS_BUILD_DIR/travis/build.sh
 before_deploy:
   - mkdir pixel-art-app/build
-  - polymer-bundler pixel-art-app/index.html --inline-scripts --inline-css --strip-comments > pixel-art-app/build/index.build.html
+  - polymer-bundler index.html --inline-scripts --inline-css --strip-comments > build/index.build.html
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
