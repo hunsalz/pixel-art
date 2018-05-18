@@ -17,6 +17,7 @@ before_install:
   - sudo ln -s /usr/local/share/arduino/arduino /usr/local/bin/arduino
 install:
   - npm install -g polymer-cli
+  - npm install -g polymer-bundler
   - ln -s $PWD /usr/local/share/arduino/libraries/log4Esp
   - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --install-boards esp8266:esp8266;
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs;
@@ -28,11 +29,12 @@ script:
   - cd ..
   - source $TRAVIS_BUILD_DIR/travis/build.sh
 before_deploy:
-  - sed 's/href="\/src/href="\/pixel-art\/src/g' index.html
+  - mkdir pixel-art-app/build
+  - polymer-bundler pixel-art-app/index.html --inline-scripts --inline-css --strip-comments > pixel-art-app/build/index.build.html && gzip pixel-art-app/build/index.build.html
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
-  local-dir: pixel-art-app/
+  local-dir: pixel-art-app/build/
   skip-cleanup: true
   keep-history: true
   verbose: true
