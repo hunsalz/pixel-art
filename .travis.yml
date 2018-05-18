@@ -25,7 +25,7 @@ install:
   - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
   - source $TRAVIS_BUILD_DIR/travis/build.sh
-  - arduino --verify Esp8266/Esp8266.ino
+  - arduino --verify --verbose-build Esp8266/Esp8266.ino
   - cd pixel-art-app/
   - polymer install -v
 before_deploy:
