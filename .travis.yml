@@ -30,7 +30,7 @@ script:
   - source $TRAVIS_BUILD_DIR/travis/build.sh
 before_deploy:
   - mkdir pixel-art-app/build
-  - polymer-bundler pixel-art-app/index.html --inline-scripts --inline-css --strip-comments > pixel-art-app/build/index.build.html && gzip pixel-art-app/build/index.build.html
+  - polymer-bundler pixel-art-app/index.html --inline-scripts --inline-css --strip-comments > pixel-art-app/build/index.build.html
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
