@@ -18,7 +18,10 @@ before_install:
 install:
   - npm install -g polymer-cli
   - npm install -g polymer-bundler
-  - ln -s $PWD /usr/local/share/arduino/libraries/log4Esp
+  - mkdir -p ~/Arduino/libraries
+  - ln -s $PWD ~/Arduino/libraries/.
+  - git clone https://github.com/hunsalz/esp8266utils.git ~/Arduino/libraries
+  - arduino --install-library "log4Esp:1.0.0"
   - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --install-boards esp8266:esp8266;
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs;
   - arduino --board esp8266:esp8266:generic --save-prefs
