@@ -28,7 +28,7 @@ script:
   - cd pixel-art-app/
   - polymer install -v
 before_deploy:
-  - mkdir pixel-art-app/build
+  - mkdir build
   - polymer-bundler index.html --inline-scripts --inline-css --strip-comments > build/index.build.html
 deploy:
   provider: pages
