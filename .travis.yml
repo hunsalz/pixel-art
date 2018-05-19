@@ -23,8 +23,8 @@ install:
   - git clone https://github.com/hunsalz/esp8266utils.git ~/Arduino/libraries/esp8266utils
   - arduino --install-library "log4Esp:1.0.0"
   - arduino --install-library "ArduinoJson:5.13.1"
-  - git clone https://github.com/me-no-dev/ESPAsyncTCP.git ~/Arduino/libraries/esp8266utils
-  - git clone https://github.com/me-no-dev/ESPAsyncWebServer.git ~/Arduino/libraries/esp8266utils
+  - git clone https://github.com/me-no-dev/ESPAsyncTCP.git ~/Arduino/libraries/ESPAsyncTCP
+  - git clone https://github.com/me-no-dev/ESPAsyncWebServer.git ~/Arduino/libraries/ESPAsyncWebServer
   - arduino --install-library "FastLED:3.1.6"
   - arduino --pref "boardsmanager.additional.urls=http://arduino.esp8266.com/stable/package_esp8266com_index.json" --install-boards esp8266:esp8266;
   - arduino --pref "boardsmanager.additional.urls=" --save-prefs;
