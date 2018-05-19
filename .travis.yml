@@ -1,4 +1,5 @@
-language: node_js
+language: cpp
+compiler: gcc
 dist: trusty
 os: linux
 env:
