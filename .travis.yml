@@ -2,6 +2,12 @@ language: cpp
 compiler: gcc
 dist: trusty
 os: linux
+  addons:
+    apt:
+      sources:
+        - ubuntu-toolchain-r-test
+      packages:
+        - g++-7
 env:
   global:
     - ARDUINO_VERSION=1.8.5
