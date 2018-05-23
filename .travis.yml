@@ -1,13 +1,12 @@
-language: cpp
-compiler: gcc
 dist: trusty
-os: linux
-  addons:
-    apt:
-      sources:
-        - ubuntu-toolchain-r-test
-      packages:
-        - g++-7
+language: cpp
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-7
+      - g++-7
 env:
   global:
     - ARDUINO_VERSION=1.8.5
@@ -37,6 +36,10 @@ install:
   - arduino --install-boards esp8266:esp8266
   - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
+  - gcc --version
+  - export CC=gcc-7
+  - export CXX=g++-7
+  - gcc --version
   - source $TRAVIS_BUILD_DIR/travis/build.sh
   - arduino --verify --verbose-build Esp8266/Esp8266.ino
   - cd pixel-art-app/
