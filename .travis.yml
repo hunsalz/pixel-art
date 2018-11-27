@@ -6,6 +6,8 @@ env:
 node_js:
   - "node"
   - "stable"
+stages:
+  - deploy
 cache:
   directories:
     - node_modules
@@ -37,7 +39,6 @@ script:
 deploy:
   provider: pages
   github-token: $GH_PAGES_TOKEN
-  local-dir: pixel-art-app/build/
   skip-cleanup: true
   keep-history: true
   verbose: true
