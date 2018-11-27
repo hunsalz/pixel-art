@@ -5,7 +5,13 @@
 
 ## Watch [Pixel-Art-App ↗](https://hunsalz.github.io/pixel-art/) live.
 
-Pixel-Art-App is a [Polymer 2.0](https://www.polymer-project.org/2.0/) app to draw pictures on a Neopixel matrix. Size of the matrix is alterable in the source files. App can be served directly from ESP8266 with SPIFFS or from any other host system that is able to open a WebSocket connection to the ESP.
+Pixel-Art-App is a [Progressive Web App](https://en.wikipedia.org/wiki/Progressive_web_applications) to draw pictures on a Neopixel matrix. Size of the matrix is alterable in the source files. App can be served directly from ESP8266 with SPIFFS.
+
+## Features
+
+* Use a [Progressive Web App](https://en.wikipedia.org/wiki/Progressive_web_applications) as controller. Add it without further installation to your homescreen.
+* Use Web standard communication with [WebSockets](https://developer.mozilla.org/de/docs/WebSockets)
+* Use cheap hardware components
 
 ## Hardware listing
 
@@ -21,26 +27,54 @@ TODO
 
 TODO 
 
-## Setup Pixel-Art
+### Build Web-App with [Polymer 3.0](https://polymer-library.polymer-project.org/3.0/docs/devguide/feature-overview)
 
-1. Install Polymer dependencies
-```
-npm install -g polymer-cli
-cd pixel-art-app/
-polymer install
-```
+*Prerequisition: [Polymer CLI](https://www.npmjs.com/package/polymer-cli)*
 
-2. Build bundled app
+1. Install all dependencies
+
+Go to folder *tracked-racer-app*:
+
 ```
-polymer-bundler index.html --inline-scripts --inline-css --strip-comments > ../Esp8266/data/www/index.build.html && gzip ../Esp8266/data/www/index.build.html
+$ polymer install
 ```
 
-3. Upload sketch to ESP8266
+2. Test app locally in your browser. 
 
-Rename `config.h.template` to `config.h` and insert your WiFi settings.
+```
+$ polymer serve --open
+```
 
-4. Upload bundled app to ESP8266
+_Note: By design this app runs locally on ESP8266 and depends on a WebSocket served by the WebServer of the ESP. For production adjust the WS endpoint._
 
-A [plugin](https://github.com/esp8266/arduino-esp8266fs-plugin) is available for Arduino IDE.
+3. Prepare for production
 
-5. Browse to http://esp8266.local/ to load app.
+```
+$ polymer build
+```
+
+4. Upload app to ESP8266
+
+Finally upload app from __ESP8266/data/www__ folder to your ESP8266. Go to Arduino IDE __Tools > [ESP8266 Sketch Data Upload](https://github.com/esp8266/arduino-esp8266fs-plugin)__
+
+*Note*: Close _Serial Monitor_ of Arduino IDE before uploading data. Otherwise upload will interrupt.
+
+### *Compile & upload C++ code to ESP8266*
+
+Load sketch __ESP8266.ino__ from __ESP8266__ folder in [Arduino IDE](https://www.arduino.cc/en/main/software).
+
+Verify dependencies:
+
+TODO
+
+You can manage your additional includes by Arduino IDE __Sketch > Include Library > Manage Libraries__ or you checkout dependencies yourself by __git clone__ in your __library__ folder of your Arduino sketchbook location.
+
+Using git allows you to easily update all libraries at once:
+
+```
+ls | xargs -I{} git -C {} pull
+```
+
+With all dependencies provided the code should compile and is ready for upload.
+
+5. Browse to http://esp8266.local/ to load the app.

@@ -1,7 +1,21 @@
 {
-  "name": "Pixel-Art-App",
-  "short_name": "Pixel-Art-App",
+  "name": "Pixel-Art-App draws pixtures on a on a Neopixel matrix",
+  "short_name": "Pixel-Art",
   "start_url": "/",
   "display": "fullscreen",
-  "orientation": "landscape"
+  "orientation": "portrait",
+  "theme_color": "#3f51b5",
+  "background_color": "#3f51b5",
+  "icons": [
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "images/png"
+    },
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "images/png"
+    }
+  ]
 }

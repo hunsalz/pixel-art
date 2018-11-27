@@ -1,23 +1,41 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/pixel-art-app/pixel-art-app.html",
+  "shell": "src/pixel-art-app/pixel-art-app.js",
   "sources": [
-    "src/**/*",
-    "bower.json"
+    "fonts/**/*",
+    "images/**/*",
+    "src/**.js",
+    "manifest/**",
+    "package.json"
   ],
   "extraDependencies": [
-    "manifest.json",
-    "bower_components/webcomponentsjs/webcomponents-lite.js"
+    "manifest.json"
   ],
-  "lint": {
-    "rules": [
-      "polymer-2"
-    ]
-  },
   "builds": [
     {
-      "preset": "es6-unbundled",
-      "addServiceWorker": false
+      "name": "public",
+      "preset": "es6-bundled",
+      "js": {
+        "compile": "es2015",
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true,
+      "addPushManifest": false
     }
-  ]
+  ],
+  "moduleResolution": "node",
+  "npm": true,
+  "lint": {
+    "rules": [
+      "polymer-3"
+    ]
+  }
 }
