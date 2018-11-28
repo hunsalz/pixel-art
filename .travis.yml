@@ -8,6 +8,7 @@ node_js:
   - "stable"
 stages:
   - deploy
+    name: "Deploy to GH-PAGES"
 cache:
   directories:
     - node_modules
