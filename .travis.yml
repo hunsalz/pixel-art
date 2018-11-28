@@ -42,7 +42,7 @@ deploy:
   github-token: $GH_PAGES_TOKEN
   skip-cleanup: true
   keep-history: true
-  local-dir: build
+  local-dir: pixel-art/build
   verbose: true
   on:
     branch: master
