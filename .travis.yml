@@ -32,17 +32,17 @@ install:
   - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
   - source $TRAVIS_BUILD_DIR/travis/build.sh
-  - cd pixel-art-app/
+  - cd tracked-racer-app
   - npm install
+  - sed -i 's|service-worker.js|tracked-racer/service-worker.js|g' index.html # expand path to match GH-PAGES root dir
+  - sed -i 's|src="src|src="tracked-racer/src|g' index.html # expand path to match GH-PAGES root dir
   - polymer build
-  - mv build/public .
-  - echo "<META http-equiv="refresh" content=\"0;URL=public/demo/\">" >index.html
 deploy:
   provider: pages
   skip-cleanup: true
   github-token: $GH_PAGES_TOKEN
   keep-history: true
-  local-dir: .
+  local-dir: pixel-art-app/build/public
   verbose: true
   on:
     branch: master
