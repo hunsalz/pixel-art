@@ -1,6 +1,7 @@
 {
-  "name": "Pixel-Art-App draws pixtures on a on a Neopixel matrix",
+  "name": "Pixel-Art",
   "short_name": "Pixel-Art",
+  "description": "Pixel-Art-App draws pixtures on a on a Neopixel matrix",
   "start_url": "/",
   "display": "fullscreen",
   "orientation": "portrait",

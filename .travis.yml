@@ -7,7 +7,8 @@ node_js:
   - "node"
   - "stable"
 stages:
-  - deploy
+- deploy
+- ':deploy it to GH-PAGES'
 cache:
   directories:
     - node_modules
@@ -34,13 +35,14 @@ script:
   - cd pixel-art-app/
   - npm install
   - polymer build
-  - cd ..
-  - echo "<META http-equiv="refresh" content=\"0;URL=pixel-art-app/build/public/\">" > index.html
+  - mv build/public .
+  - echo "<META http-equiv="refresh" content=\"0;URL=public/demo/\">" >index.html
 deploy:
   provider: pages
-  github-token: $GH_PAGES_TOKEN
   skip-cleanup: true
+  github-token: $GH_PAGES_TOKEN
   keep-history: true
+  local-dir: .
   verbose: true
   on:
     branch: master
