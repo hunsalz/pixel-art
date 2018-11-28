@@ -1,0 +1,41 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/pixel-art-app/pixel-art-app.js",
+  "sources": [
+    "fonts/**/*",
+    "images/**/*",
+    "src/**.js",
+    "manifest/**",
+    "package.json"
+  ],
+  "extraDependencies": [
+    "manifest.json"
+  ],
+  "builds": [
+    {
+      "name": "public",
+      "preset": "es6-bundled",
+      "js": {
+        "compile": "es2015",
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true,
+      "addPushManifest": false
+    }
+  ],
+  "moduleResolution": "node",
+  "npm": true,
+  "lint": {
+    "rules": [
+      "polymer-3"
+    ]
+  }
+}
