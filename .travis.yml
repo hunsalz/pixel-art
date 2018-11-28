@@ -32,7 +32,7 @@ install:
   - arduino --pref "compiler.warning_level=all" --save-prefs
 script:
   - source $TRAVIS_BUILD_DIR/travis/build.sh
-  - cd tracked-racer-app
+  - cd pixel-art-app
   - npm install
   - sed -i 's|service-worker.js|tracked-racer/service-worker.js|g' index.html # expand path to match GH-PAGES root dir
   - sed -i 's|src="src|src="tracked-racer/src|g' index.html # expand path to match GH-PAGES root dir
