@@ -34,8 +34,8 @@ script:
   - source $TRAVIS_BUILD_DIR/travis/build.sh
   - cd pixel-art-app
   - npm install
-  - sed -i 's|service-worker.js|tracked-racer/service-worker.js|g' index.html # expand path to match GH-PAGES root dir
-  - sed -i 's|src="src|src="tracked-racer/src|g' index.html # expand path to match GH-PAGES root dir
+  - sed -i 's|service-worker.js|pixel-art/service-worker.js|g' index.html # expand path to match GH-PAGES root dir
+  - sed -i 's|src="src|src="pixel-art/src|g' index.html # expand path to match GH-PAGES root dir
   - polymer build
 deploy:
   provider: pages
