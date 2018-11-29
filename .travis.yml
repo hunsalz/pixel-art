@@ -35,13 +35,10 @@ script:
   - cd pixel-art-app
   - npm install
   - sed -i 's|service-worker.js|pixel-art/service-worker.js|g' index.html # expand path to match GH-PAGES root dir
+  - sed -i 's|src="node_modules|src="pixel-art/node_modules|g' index.html # expand path to match GH-PAGES root dir
   - sed -i 's|src="src|src="pixel-art/src|g' index.html # expand path to match GH-PAGES root dir
   - polymer build
   - touch build/public/.nojekyll # bypass Jekyll on GitHub Pages
-  - cd build/public
-  - touch node_modules/test.tmp
-  - touch node_modules/@webcomponents/test.tmp
-  - touch node_modules/@webcomponents/webcomponentsjs/test.tmp
 deploy:
   provider: pages
   skip-cleanup: true
