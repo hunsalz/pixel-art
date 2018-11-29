@@ -39,10 +39,8 @@ script:
   - polymer build
   - touch build/public/.nojekyll # bypass Jekyll on GitHub Pages
   - cd build/public
-  - mkdir @webcomponents
-  - mkdir webcomponents
-  - cp -R node_modules/@webcomponents/* @webcomponents
-  - cp -R node_modules/@webcomponents/webcomponents/* webcomponents
+  - touch node_modules/test.tmp
+  - touch node_modules/@webcomponents/test.tmp
 deploy:
   provider: pages
   skip-cleanup: true
