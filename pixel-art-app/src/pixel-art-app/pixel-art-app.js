@@ -153,7 +153,7 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
         </div>
       </div>
 
-      <paper-toast id="toast" vertical-align="top" text="[[__message(state)]]" duration="6000"></paper-toast>
+      <paper-toast id="toast" vertical-align="top" text="[[__showWSMessage(state)]]" duration="6000"></paper-toast>
     `;
   }
   static get properties() {
@@ -194,6 +194,8 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
 
   /**
    * Calculate a 8x8 matrix index from top left (0) to bottom right (63).
+   * @param {*} x 
+   * @param {*} y 
    */
   __index(x, y) {
     return (x * 8) + y;
@@ -208,6 +210,7 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
 
   /**
    * Set a new color value.
+   * @param {*} event 
    */
   __setColor(event) {
     // save color value
@@ -223,7 +226,8 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
   }
 
   /**
-   * Set target pixel corresponding to current color value and notify change via WS.  
+   * Set target pixel corresponding to current color value and notify change via WS.
+   * @param {*} event 
    */
   __setPixelColor(event) {
 
@@ -231,6 +235,10 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
     this.$.ws.send({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
   }
 
+  /**
+   * Reset matrix with one color.
+   * @param {*} event 
+   */
   __reset(event) {
 
     // set active color to all pixels at once
@@ -243,6 +251,7 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
 
   /**
    * Return RGB-object from CSS 'rgb(red, green, blue)' string.
+   * @param {*} rgb 
    */
   __parseRGB(rgb) {
 
@@ -252,6 +261,7 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
 
   /**
    * Return RGB as Hex value from CSS 'rgb(red, green, blue)' string.
+   * @param {*} rgb 
    */
   __parseRGB2Hex(rgb) {
 
@@ -263,10 +273,16 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
     return hex(obj.g) + hex(obj.r) + hex(obj.b);
   }
 
-  __message(state) {
+  /**
+   * Show a human readable WS state message
+   * @param {*} state 
+   */
+  __showWSMessage(state) {
 
     this.$.toast.open();
     switch (this.state) {
+      case -1:
+        return "No response from " + this.url;
       case 0:
         return "Connecting with " + this.url;
       case 1:
