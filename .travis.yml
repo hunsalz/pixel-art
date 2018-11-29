@@ -8,7 +8,7 @@ node_js:
   - "stable"
 stages:
   - deploy
-  - ':ship it to GH-PAGES'
+  - ':ship it to GitHub Pages'
 cache:
   directories:
     - node_modules
@@ -37,6 +37,7 @@ script:
   - sed -i 's|service-worker.js|pixel-art/service-worker.js|g' index.html # expand path to match GH-PAGES root dir
   - sed -i 's|src="src|src="pixel-art/src|g' index.html # expand path to match GH-PAGES root dir
   - polymer build
+  - touch build/public/.nojekyll # bypass Jekyll on GitHub Pages
 deploy:
   provider: pages
   skip-cleanup: true
