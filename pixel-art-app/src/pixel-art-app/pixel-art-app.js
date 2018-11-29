@@ -7,6 +7,7 @@ import '@polymer/iron-icons/editor-icons.js';
 
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/paper-styles/paper-styles.js';
+import '@polymer/paper-toast/paper-toast.js';
 
 import '@hunsalz/web-socket/web-socket.js';
 
@@ -107,6 +108,11 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
             min-height: 80vw;
           }
         }
+
+        paper-toast {
+          width: 100%;
+          text-align: center;
+        }
       </style>
       
       <!-- service components -->
@@ -116,7 +122,6 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
       <!-- UI components -->
       
       <div class="container">
-
         <div class="boxing">
           <div id="colors" class="colors">
             <div class="color" style="background: #FFFFFF; padding: 4px" on-tap="__setColor"></div>
@@ -132,9 +137,9 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
 
         <div class="boxing">
           <div id="matrix" class="matrix">
-            <template is="dom-repeat" items="{{columns}}" index-as="y">
+            <template is="dom-repeat" items="{{rows}}" index-as="y">
               <div class="row">
-                <template is="dom-repeat" items="{{rows}}" index-as="x">
+                <template is="dom-repeat" items="{{columns}}" index-as="x">
                   <div id="[[__index(x, y)]]" class="pixel" on-click="__setPixelColor"></div>
                 </template>
               </div>
@@ -143,10 +148,12 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
         </div>
 
         <div class="boxing">
+          <!-- TODO fix layouting - this div overlaps last matrix row, so that no click event is triggered; set backgroundcolor to visualize effect -->
           <paper-icon-button icon="editor:format-color-fill" on-tap="__reset" role="button" tabindex="0" aria-disabled="false"></paper-icon-button>
         </div>
-
       </div>
+
+      <paper-toast id="toast" vertical-align="top" text="[[__message(state)]]" duration="6000"></paper-toast>
     `;
   }
   static get properties() {
@@ -193,7 +200,7 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
   }
 
   /**
-   * Log WS state changes.
+   * Debug log for WS state changes
    */
   __handleWSStateChanges() {
     console.log("WS state: " + this.state);
@@ -221,7 +228,6 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
   __setPixelColor(event) {
 
     event.target.style.background = this.color;
-
     this.$.ws.send({ pixel: event.target.id, rgb: this.__parseRGB2Hex(this.color) });
   }
 
@@ -232,7 +238,6 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
     for (var i = 0; i < nodes.length; i++) {
       nodes[i].style.background = this.color;
     }
-
     this.$.ws.send({ reset: "all", rgb: this.__parseRGB2Hex(this.color) });
   }
 
@@ -258,19 +263,34 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
     return hex(obj.g) + hex(obj.r) + hex(obj.b);
   }
 
+  __message(state) {
+
+    this.$.toast.open();
+    switch (this.state) {
+      case 0:
+        return "Connecting with " + this.url;
+      case 1:
+        return "Connected with " + this.url;
+      case 2:
+        return "Closing connection with " + this.url;
+      case 3:
+        return "Connection with " + this.url + " closed";
+      default:
+        // shouldn't be called ever
+        this.$.toast.close();
+        return "";
+    }
+  }
+
   __computeWSUrl() {
-
-    console.log(window.location.hostname);
-    console.log("hostname.endsWith(github.io)", window.location.hostname.endsWith("github.io"));
-
+    
     let hostname = window.location.hostname;
     if (hostname === "127.0.0.1" || hostname.endsWith("github.io")) {
       let wsUrlDev = "wss://echo.websocket.org/";
       console.warn(hostname + " is defined as dev environment. Use " + wsUrlDev + " as mock service.");
       return wsUrlDev;
     } else {
-      return "wss://echo.websocket.org/"; // URL must match with device preferences
-      //return "ws://" + window.location.hostname + ':8000/matrix'; // URL must match with device preferences
+      return "ws://" + window.location.hostname + ':8000/matrix'; // URL must match with device preferences
     }
   }
 }
