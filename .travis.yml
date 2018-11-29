@@ -41,6 +41,7 @@ script:
   - cd build/public
   - touch node_modules/test.tmp
   - touch node_modules/@webcomponents/test.tmp
+  - touch node_modules/@webcomponents/webcomponentsjs/test.tmp
 deploy:
   provider: pages
   skip-cleanup: true
