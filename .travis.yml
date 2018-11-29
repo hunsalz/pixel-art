@@ -38,6 +38,9 @@ script:
   - sed -i 's|src="src|src="pixel-art/src|g' index.html # expand path to match GH-PAGES root dir
   - polymer build
   - touch build/public/.nojekyll # bypass Jekyll on GitHub Pages
+  - cd build/public
+  - mkdir @webcomponents
+  - mkdir webcomponents
   - cp -R node_modules/@webcomponents/* @webcomponents
   - cp -R node_modules/@webcomponents/webcomponents/* webcomponents
 deploy:
