@@ -9,7 +9,8 @@
     "package.json"
   ],
   "extraDependencies": [
-    "manifest.json"
+    "manifest.json",
+    "node_modules/@webcomponents/webcomponentsjs/**"
   ],
   "builds": [
     {
