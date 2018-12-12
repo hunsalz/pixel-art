@@ -153,7 +153,7 @@ class PixelArtApp extends GestureEventListeners(PolymerElement) {
         </div>
       </div>
 
-      <paper-toast id="toast" vertical-align="top" text="[[__showWSMessage(state)]]" duration="6000"></paper-toast>
+      <paper-toast id="toast" text="[[__showWSMessage(state)]]" duration="6000"></paper-toast>
     `;
   }
   static get properties() {
