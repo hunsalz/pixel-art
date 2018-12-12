@@ -2,7 +2,7 @@ dist: trusty
 language: cpp
 env:
   global:
-    - ARDUINO_VERSION=1.8.5
+    - ARDUINO_VERSION=1.8.8
 node_js:
   - "node"
   - "stable"
