@@ -931,9 +931,7 @@ and this string can then be deleted`;function elementIsScrollLocked(element){var
       --default-primary-color: var(--primary-color);
     }
   </style>
-</custom-style>`;template$3.setAttribute("style","display: none;");document.head.appendChild(template$3.content);const template$4=html`
-<dom-module id="paper-icon-button">
-  <template strip-whitespace>
+</custom-style>`;template$3.setAttribute("style","display: none;");document.head.appendChild(template$3.content);Polymer({is:"paper-icon-button",_template:html`
     <style>
       :host {
         display: inline-block;
@@ -951,7 +949,10 @@ and this string can then be deleted`;function elementIsScrollLocked(element){var
         width: 40px;
         height: 40px;
 
-        /* NOTE: Both values are needed, since some phones require the value to be \`transparent\`. */
+        /*
+          NOTE: Both values are needed, since some phones require the value to
+          be \`transparent\`.
+        */
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         -webkit-tap-highlight-color: transparent;
 
@@ -988,10 +989,9 @@ and this string can then be deleted`;function elementIsScrollLocked(element){var
       }
     </style>
 
-    <iron-icon id="icon" src="[[src]]" icon="[[icon]]" alt\$="[[alt]]"></iron-icon>
-  </template>
-</dom-module>
-`;template$4.setAttribute("style","display: none;");document.body.appendChild(template$4.content);Polymer({is:"paper-icon-button",hostAttributes:{role:"button",tabindex:"0"},behaviors:[PaperInkyFocusBehavior],properties:{src:{type:String},icon:{type:String},alt:{type:String,observer:"_altChanged"}},_altChanged:function(newValue,oldValue){var label=this.getAttribute("aria-label");if(!label||oldValue==label){this.setAttribute("aria-label",newValue)}}});const template$5=html`
+    <iron-icon id="icon" src="[[src]]" icon="[[icon]]"
+               alt$="[[alt]]"></iron-icon>
+  `,hostAttributes:{role:"button",tabindex:"0"},behaviors:[PaperInkyFocusBehavior],registered:function(){this._template.setAttribute("strip-whitespace","")},properties:{src:{type:String},icon:{type:String},alt:{type:String,observer:"_altChanged"}},_altChanged:function(newValue,oldValue){var label=this.getAttribute("aria-label");if(!label||oldValue==label){this.setAttribute("aria-label",newValue)}}});const template$4=html`
 <custom-style>
   <style is="custom-style">
     html {
@@ -1055,7 +1055,7 @@ and this string can then be deleted`;function elementIsScrollLocked(element){var
       };
     }
   </style>
-</custom-style>`;template$5.setAttribute("style","display: none;");document.head.appendChild(template$5.content);const template$6=html`<custom-style>
+</custom-style>`;template$4.setAttribute("style","display: none;");document.head.appendChild(template$4.content);const template$5=html`<custom-style>
   <style is="custom-style">
     html {
 
@@ -1211,7 +1211,7 @@ and this string can then be deleted`;function elementIsScrollLocked(element){var
     }
 
   </style>
-</custom-style>`;template$6.setAttribute("style","display: none;");document.head.appendChild(template$6.content);var currentToast=null;Polymer({_template:html`
+</custom-style>`;template$5.setAttribute("style","display: none;");document.head.appendChild(template$5.content);var currentToast=null;Polymer({_template:html`
     <style>
       :host {
         display: block;

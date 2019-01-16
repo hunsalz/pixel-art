@@ -37,7 +37,7 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-var precacheConfig = [["index.html","8414046b1bd1cbc4ab54e9e6a84f0cba"],["src/pixel-art-app/pixel-art-app.js","cbe6958a3b0573d5a102a7f27022e892"]];
+var precacheConfig = [["index.html","8414046b1bd1cbc4ab54e9e6a84f0cba"],["src/pixel-art-app/pixel-art-app.js","10c67d28c756a630c7a898ff4f30ddbb"]];
 var cacheName = 'sw-precache-v3--' + (self.registration ? self.registration.scope : '');
 
 
