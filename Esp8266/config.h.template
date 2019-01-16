@@ -1,5 +1,0 @@
-// WiFi settings
-const char *WIFI_SSID_1 = "YOUR SSID";
-const char *WIFI_PSK_1 = "YOUR PRE SHARED KEY";
-const char *WIFI_SSID_2 = "YOUR SSID";
-const char *WIFI_PSK_2 = "YOUR PRE SHARED KEY";

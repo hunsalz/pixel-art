@@ -1,0 +1,12 @@
+// WiFi settings
+const char *WIFI_SSID_1 = "YOUR SSID";
+const char *WIFI_PSK_1 = "YOUR PRE SHARED KEY";
+const char *WIFI_SSID_2 = "YOUR SSID";
+const char *WIFI_PSK_2 = "YOUR PRE SHARED KEY";
+
+// provide WiFi AP settings
+const char* WIFI_AP_SSID = "MyESP";
+const char* WIFI_AP_PSK = "password";
+
+// define loop interval in milli seconds
+static const uint16_t LOOP_INTERVAL = 15 * 1000; // 15s
