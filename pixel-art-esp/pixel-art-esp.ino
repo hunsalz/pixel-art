@@ -8,6 +8,7 @@
 #include <Esp8266Utils.h>       // https://github.com/hunsalz/esp8266utils
 
 #include "config.h"
+#include "html.h"
 
 using namespace esp8266utils;
 
@@ -15,6 +16,8 @@ using namespace esp8266utils;
 #define DATA_PIN 4
 
 ESP8266WebServer server(80);
+WebSocketsServerListener webSocketsServerListener;
+WebSocketsServer webSocketsServer = WebSocketsServer(81);
 CRGB leds[NUM_LEDS];
 
 unsigned long nextLoopInterval = 0;
@@ -82,6 +85,45 @@ void setup() {
   server.on("/matrix", HTTP_GET, []() {
   
     VERBOSE("TODO");
+  });
+
+  // add static ws test resource
+  server.on("/", []() {
+    server.send_P(200, TEXT_HTML, WS_TEST_HTML);
+  });
+
+  // define specific ws listener handler
+  webSocketsServerListener.onTextMessage([](uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
+
+    // try to parse payload as json
+    DynamicJsonDocument docRequest;
+    DeserializationError err = deserializeJson(docRequest, payload);
+    if (err) {
+      VERBOSE_F("Reading request failed: %s", err.c_str());
+      webSocketsServer.sendTXT(num, "Received an unexpected message.");
+    } else {
+      // map json request
+      JsonObject request = docRequest.as<JsonObject>();
+      // TODO
+
+      // create json response
+      DynamicJsonDocument docResponse;
+      JsonObject response = docResponse.to<JsonObject>();
+      
+      // TODO
+      response["echo"] = "success";
+
+      
+      // send response message
+      StreamString* msg = new StreamString();
+      serializeJson(response, *msg);
+      webSocketsServer.sendTXT(num, *msg);
+    }
+  });
+
+  // register ws listener
+  webSocketsServer.onEvent([](uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
+    webSocketsServerListener.onEvent(num, type, payload, length);
   });
 
   // start web server
