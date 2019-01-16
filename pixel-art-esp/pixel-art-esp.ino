@@ -113,7 +113,7 @@ void setup() {
       // TODO
       response["echo"] = "success";
 
-      
+
       // send response message
       StreamString* msg = new StreamString();
       serializeJson(response, *msg);
@@ -142,6 +142,9 @@ void loop() {
     nextLoopInterval = millis() + LOOP_INTERVAL;
     
     MDNS.update();
+
+    int i = webSocketsServer.connectedClients(true);
+    VERBOSE_FP(F("Send WebSocket pong and received %d ping message(s)."), i);
   }
 
   // reserve time for core processes
