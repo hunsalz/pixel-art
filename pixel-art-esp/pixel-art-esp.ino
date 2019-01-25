@@ -33,7 +33,7 @@ using namespace espUtils;
 
 WebSocketsServerListener webSocketsServerListener;
 WebSocketsServer webSocketsServer = WebSocketsServer(81);
-//CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS];
 
 unsigned long nextLoopInterval = 0;
 
@@ -43,13 +43,13 @@ void setup() {
   Logging::init(115200);
   VERBOSE_FP(F("Serial baud rate is [%lu]"), Serial.baudRate());
 
+  // WiFi AP setup
+  setupWiFiAp(WIFI_AP_SSID, WIFI_AP_PSK, WIFI_MODE_APSTA);
+
   // WiFi setup
   wifiMulti.addAP(WIFI_SSID_1, WIFI_PSK_1);
   wifiMulti.addAP(WIFI_SSID_2, WIFI_PSK_2);
   setupWiFiSta(wifiMulti, WIFI_MODE_APSTA);
-
-  // WiFi AP setup
-  setupWiFiAp(WIFI_AP_SSID, WIFI_AP_PSK, WIFI_MODE_APSTA);
 
   // MDNS setup
   const char* hostname = "esp8266";
@@ -64,37 +64,19 @@ void setup() {
   MDNS.addService("http", "tcp", 80);
 
   // setup matrix
-  //FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
-  //FastLED.show();
+  FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+  FastLED.show();
 
-  // file system setup to enable static web server content
-  FileSystem fs; 
-  fs.begin();
-
-  // add dynamic http resources
-  server.on("/fs", HTTP_GET, [&fs]() {
-  
-    StreamString* payload = new StreamString();
-    size_t size = fs.serializeInfo(*payload);
-    server.send(200, APPLICATION_JSON, *payload); 
-  });
-  server.on("/files", HTTP_GET, [&fs]() {
-  
-    StreamString* payload = new StreamString();
-    size_t size = fs.serializeListing(*payload);
-    server.send(200, APPLICATION_JSON, *payload); 
-  });
-
-  server.on("/sta", HTTP_GET, []() {
-  
-    StreamString* payload = new StreamString();
-    size_t size = serializeWiFiSta(*payload);
-    server.send(200, APPLICATION_JSON, *payload); 
-  });
   server.on("/ap", HTTP_GET, []() {
   
     StreamString* payload = new StreamString();
     size_t size = serializeWiFiAp(*payload);
+    server.send(200, APPLICATION_JSON, *payload); 
+  });
+  server.on("/sta", HTTP_GET, []() {
+  
+    StreamString* payload = new StreamString();
+    size_t size = serializeWiFiSta(*payload);
     server.send(200, APPLICATION_JSON, *payload); 
   });
   server.on("/esp", HTTP_GET, []() {
@@ -104,8 +86,7 @@ void setup() {
     server.send(200, APPLICATION_JSON, *payload); 
   });
   server.on("/matrix", HTTP_GET, []() {
-  
-    VERBOSE("TODO");
+    WARNING("TODO");
   });
 
   // add static ws test resource
@@ -164,7 +145,9 @@ void loop() {
     
     VERBOSE("LOOP");
 
-    MDNS.update();
+    #ifdef ESP8266
+      MDNS.update();
+    #endif
 
     int i = webSocketsServer.connectedClients(true);
     VERBOSE_FP(F("Send WebSocket pong and received %d ping message(s)."), i);
