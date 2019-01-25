@@ -1,32 +1,39 @@
 #ifdef ESP32
-#include <ESPmDNS.h>            // https://github.com/espressif/arduino-esp32/blob/master/libraries/ESPmDNS/src/ESPmDNS.h
-#include <WebServer.h>          // https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/src/WebServer.h
-#include <WiFiMulti.h>          // https://github.com/espressif/arduino-esp32/blob/master/libraries/WiFi/src/WiFiMulti.h
+  #include <ESPmDNS.h>            // https://github.com/espressif/arduino-esp32/blob/master/libraries/ESPmDNS/src/ESPmDNS.h
+  #include <WebServer.h>          // https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/src/WebServer.h
+  #include <WiFiMulti.h>          // https://github.com/espressif/arduino-esp32/blob/master/libraries/WiFi/src/WiFiMulti.h
 #else
-#include <ESP8266mDNS.h>        // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266mDNS/src/ESP8266mDNS.h
-#include <ESP8266WebServer.h>   // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WebServer/src/ESP8266WebServer.h
-#include <ESP8266WiFiMulti.h>   // https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi/src/ESP8266WiFiMulti.h
+  #include <ESP8266mDNS.h>        // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266mDNS/src/ESP8266mDNS.h
+  #include <ESP8266WebServer.h>   // https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266WebServer/src/ESP8266WebServer.h
+  #include <ESP8266WiFiMulti.h>   // https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi/src/ESP8266WiFiMulti.h
 #endif
 
-#include <StreamString.h>       // https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/StreamString.h
-                                // https://github.com/esp8266/Arduino/blob/master/cores/esp8266/StreamString.h
+#include <StreamString.h>         // https://github.com/espressif/arduino-esp32/blob/master/cores/esp32/StreamString.h
+                                  // https://github.com/esp8266/Arduino/blob/master/cores/esp8266/StreamString.h
 
-#include "FastLED.h"            // https://github.com/FastLED/FastLED
+#include "FastLED.h"              // https://github.com/FastLED/FastLED
 
-#include <ESPUtils.h>           // https://github.com/hunsalz/ESPUtils
+#include <EspUtils.h>             // https://github.com/hunsalz/EspUtils
 
 #include "config.h"
 #include "html.h"
 
-using namespace ESPUtils;
+using namespace espUtils;
 
 #define NUM_LEDS 64
 #define DATA_PIN 4
 
-ESP8266WebServer server(80);
+#ifdef ESP32
+  WiFiMulti wifiMulti;
+  WebServer server(80);
+#else
+  ESP8266WiFiMulti wifiMulti;
+  ESP8266WebServer server(80);
+#endif
+
 WebSocketsServerListener webSocketsServerListener;
 WebSocketsServer webSocketsServer = WebSocketsServer(81);
-CRGB leds[NUM_LEDS];
+//CRGB leds[NUM_LEDS];
 
 unsigned long nextLoopInterval = 0;
 
@@ -37,13 +44,12 @@ void setup() {
   VERBOSE_FP(F("Serial baud rate is [%lu]"), Serial.baudRate());
 
   // WiFi setup
-  ESP8266WiFiMulti wifiMulti;
   wifiMulti.addAP(WIFI_SSID_1, WIFI_PSK_1);
   wifiMulti.addAP(WIFI_SSID_2, WIFI_PSK_2);
-  setupWiFiSta(wifiMulti);
+  setupWiFiSta(wifiMulti, WIFI_MODE_APSTA);
 
   // WiFi AP setup
-  setupWiFiAp(WIFI_AP_SSID, WIFI_AP_PSK);
+  setupWiFiAp(WIFI_AP_SSID, WIFI_AP_PSK, WIFI_MODE_APSTA);
 
   // MDNS setup
   const char* hostname = "esp8266";
@@ -58,8 +64,8 @@ void setup() {
   MDNS.addService("http", "tcp", 80);
 
   // setup matrix
-  FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
-  FastLED.show();
+  //FastLED.addLeds<WS2811, DATA_PIN, RGB>(leds, NUM_LEDS);
+  //FastLED.show();
 
   // file system setup to enable static web server content
   FileSystem fs; 
@@ -76,6 +82,13 @@ void setup() {
   
     StreamString* payload = new StreamString();
     size_t size = fs.serializeListing(*payload);
+    server.send(200, APPLICATION_JSON, *payload); 
+  });
+
+  server.on("/sta", HTTP_GET, []() {
+  
+    StreamString* payload = new StreamString();
+    size_t size = serializeWiFiSta(*payload);
     server.send(200, APPLICATION_JSON, *payload); 
   });
   server.on("/ap", HTTP_GET, []() {
@@ -149,6 +162,8 @@ void loop() {
   if (millis() > nextLoopInterval) {  
     nextLoopInterval = millis() + LOOP_INTERVAL;
     
+    VERBOSE("LOOP");
+
     MDNS.update();
 
     int i = webSocketsServer.connectedClients(true);
