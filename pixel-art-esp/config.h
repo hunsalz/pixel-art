@@ -1,3 +1,9 @@
+#pragma once
+
+#ifndef DEBUG_ESP_PORT
+  #define DEBUG_ESP_PORT Serial
+#endif
+
 // WiFi settings
 const char *WIFI_SSID_1 = "Sputnik";
 const char *WIFI_PSK_1 = "!--Sputnik--!";
